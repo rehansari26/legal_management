@@ -1,0 +1,170 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "DR-.####",
+ "creation": "2024-08-30 15:06:53.410783",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_3klb",
+  "customer",
+  "nda_document",
+  "amended_from",
+  "column_break_pkwh",
+  "customer_name",
+  "revised_nda",
+  "status",
+  "review_users_section",
+  "sales_user",
+  "delivery_user",
+  "dep_user",
+  "is_reject",
+  "column_break_zdyd",
+  "finance_user",
+  "legal_user",
+  "management_user",
+  "revisions_tab",
+  "nda_revisions"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_3klb",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Customer",
+   "options": "Customer"
+  },
+  {
+   "fieldname": "nda_document",
+   "fieldtype": "Attach",
+   "label": "NDA Document"
+  },
+  {
+   "fieldname": "column_break_pkwh",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "customer.customer_name",
+   "fetch_if_empty": 1,
+   "fieldname": "customer_name",
+   "fieldtype": "Data",
+   "label": "Customer Name"
+  },
+  {
+   "default": "Draft",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "\nDraft\nUnder Review\nApproved",
+   "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Document Revision",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "review_users_section",
+   "fieldtype": "Section Break",
+   "label": "Review Users"
+  },
+  {
+   "fieldname": "sales_user",
+   "fieldtype": "Link",
+   "label": "Sales User",
+   "options": "User"
+  },
+  {
+   "fieldname": "delivery_user",
+   "fieldtype": "Link",
+   "label": "Delivery User",
+   "options": "User"
+  },
+  {
+   "fieldname": "dep_user",
+   "fieldtype": "Link",
+   "label": "DEP User",
+   "options": "User"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_reject",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "Is Reject"
+  },
+  {
+   "fieldname": "column_break_zdyd",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "finance_user",
+   "fieldtype": "Link",
+   "label": "Finance User",
+   "options": "User"
+  },
+  {
+   "fieldname": "legal_user",
+   "fieldtype": "Link",
+   "label": "Legal User",
+   "options": "User"
+  },
+  {
+   "fieldname": "management_user",
+   "fieldtype": "Link",
+   "label": "Management User",
+   "options": "User"
+  },
+  {
+   "fieldname": "revisions_tab",
+   "fieldtype": "Tab Break",
+   "label": "Revisions"
+  },
+  {
+   "fieldname": "nda_revisions",
+   "fieldtype": "Table",
+   "label": "NDA Revisions",
+   "options": "Document Revision Archives"
+  },
+  {
+   "fieldname": "revised_nda",
+   "fieldtype": "Attach",
+   "label": "Revised NDA"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2024-09-02 15:29:41.724185",
+ "modified_by": "Administrator",
+ "module": "Legal Management",
+ "name": "Document Revision",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
