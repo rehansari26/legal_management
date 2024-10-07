@@ -1,0 +1,65 @@
+[
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2024-10-07 13:04:41.938773",
+  "name": "Draft",
+  "style": "",
+  "workflow_state_name": "Draft"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2024-10-07 13:04:52.537256",
+  "name": "Sales Review Pending",
+  "style": "",
+  "workflow_state_name": "Sales Review Pending"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2024-10-07 13:05:02.303842",
+  "name": "DEP Review Pending",
+  "style": "",
+  "workflow_state_name": "DEP Review Pending"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2024-10-07 13:05:10.501864",
+  "name": "Delivery Review Pending",
+  "style": "",
+  "workflow_state_name": "Delivery Review Pending"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2024-10-07 13:05:17.945667",
+  "name": "Finance Review Pending",
+  "style": "",
+  "workflow_state_name": "Finance Review Pending"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2024-10-07 13:05:30.786601",
+  "name": "Legal Review Pending",
+  "style": "",
+  "workflow_state_name": "Legal Review Pending"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2024-10-07 13:05:39.693810",
+  "name": "Management Review Pending",
+  "style": "",
+  "workflow_state_name": "Management Review Pending"
+ }
+]
