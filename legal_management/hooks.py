@@ -284,4 +284,13 @@ fixtures = [
             ],
         }
     },
+    {"dt":"Notification","filters":
+        {"name":
+            ["in",
+                [
+                    "Revision EMail",   
+                ]
+            ],
+        }
+    },
 ]

@@ -1,0 +1,93 @@
+[
+ {
+  "attach_print": 0,
+  "channel": "Email",
+  "condition": "",
+  "date_changed": null,
+  "days_in_advance": 0,
+  "docstatus": 0,
+  "doctype": "Notification",
+  "document_type": "Document Revision",
+  "enabled": 1,
+  "event": "Value Change",
+  "is_standard": 0,
+  "message": "Hello,\n\nDocument {{ doc.name }} is pending on {{ doc.workflow_state }}.\n",
+  "message_type": "Markdown",
+  "method": null,
+  "modified": "2024-09-02 15:43:45.519832",
+  "module": null,
+  "name": "Revision EMail",
+  "print_format": null,
+  "property_value": null,
+  "recipients": [
+   {
+    "bcc": null,
+    "cc": null,
+    "condition": "doc.workflow_state == \"Sales Review Pending\"",
+    "parent": "Revision EMail",
+    "parentfield": "recipients",
+    "parenttype": "Notification",
+    "receiver_by_document_field": "",
+    "receiver_by_role": "Sales User"
+   },
+   {
+    "bcc": null,
+    "cc": null,
+    "condition": "doc.workflow_state == \"Delivery Review Pending\"",
+    "parent": "Revision EMail",
+    "parentfield": "recipients",
+    "parenttype": "Notification",
+    "receiver_by_document_field": null,
+    "receiver_by_role": "Delivery User"
+   },
+   {
+    "bcc": null,
+    "cc": null,
+    "condition": "doc.workflow_state == \"DEP Review Pending\"",
+    "parent": "Revision EMail",
+    "parentfield": "recipients",
+    "parenttype": "Notification",
+    "receiver_by_document_field": null,
+    "receiver_by_role": "DEP User"
+   },
+   {
+    "bcc": null,
+    "cc": null,
+    "condition": "doc.workflow_state == \"Finance Review Pending\"",
+    "parent": "Revision EMail",
+    "parentfield": "recipients",
+    "parenttype": "Notification",
+    "receiver_by_document_field": null,
+    "receiver_by_role": "Accounts User"
+   },
+   {
+    "bcc": null,
+    "cc": null,
+    "condition": "doc.workflow_state == \"Legal Review Pending\"",
+    "parent": "Revision EMail",
+    "parentfield": "recipients",
+    "parenttype": "Notification",
+    "receiver_by_document_field": null,
+    "receiver_by_role": "Legal User"
+   },
+   {
+    "bcc": null,
+    "cc": null,
+    "condition": "doc.workflow_state == \"Management Review Pending\"",
+    "parent": "Revision EMail",
+    "parentfield": "recipients",
+    "parenttype": "Notification",
+    "receiver_by_document_field": null,
+    "receiver_by_role": "Management"
+   }
+  ],
+  "send_system_notification": 0,
+  "send_to_all_assignees": 0,
+  "sender": "Rehan Ansari",
+  "sender_email": "rehan.ansari@cloverinfotech.com",
+  "set_property_after_alert": null,
+  "slack_webhook_url": null,
+  "subject": "{{doc.name }} is on {{ doc.workflow_state }}",
+  "value_changed": "workflow_state"
+ }
+]
