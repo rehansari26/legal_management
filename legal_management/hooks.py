@@ -189,7 +189,9 @@ app_license = "mit"
 # exempt linked doctypes from being automatically cancelled
 #
 # auto_cancel_exempted_doctypes = ["Auto Repeat"]
-
+override_whitelisted_methods = {
+	"frappe.core.doctype.user.user.update_password": "legal_management.legal_management.overrides.user.custom_update_password"
+}
 # Ignore links to specified DocTypes when deleting documents
 # -----------------------------------------------------------
 
