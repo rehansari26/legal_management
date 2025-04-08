@@ -11,6 +11,7 @@ class DocumentRevision(Document):
         if not self.is_new() and old_doc and not old_doc.workflow_state == "Draft" and not old_doc.workflow_state == self.workflow_state:
             if self.revised_nda:
                 row = self.append('nda_revisions', {})
+                row.original_nda = self.nda_document
                 row.nda_archive = self.revised_nda
                 row.change_status = "Document Changed"
                 self.nda_document = self.revised_nda
