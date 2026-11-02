@@ -1,0 +1,71 @@
+name: Server Tests
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - develop
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Legal Management Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: Install MariaDB
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y mariadb-server mariadb-client
+
+      - name: Install Redis
+        run: |
+          sudo apt-get install -y redis-server
+          sudo service redis-server start
+
+      - name: Install Frappe Bench
+        run: |
+          pip install frappe-bench
+
+      - name: Initialize Frappe Bench
+        run: |
+          bench init frappe-bench \
+            --frappe-branch version-16 \
+            --python python3.14
+
+      - name: Get Legal Management App
+        working-directory: frappe-bench
+        run: |
+          bench get-app legal_management ${{ github.server_url }}/${{ github.repository }}.git
+
+      - name: Create Test Site
+        working-directory: frappe-bench
+        run: |
+          bench new-site test_site \
+            --admin-password admin \
+            --mariadb-root-password root \
+            --no-mariadb-socket
+
+      - name: Install Legal Management
+        working-directory: frappe-bench
+        run: |
+          bench --site test_site install-app legal_management
+
+      - name: Run Tests
+        working-directory: frappe-bench
+        run: |
+          bench --site test_site run-tests --app legal_management
