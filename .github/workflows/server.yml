@@ -1,4 +1,3 @@
-```yaml
 name: Server Tests
 
 on:
@@ -105,4 +104,3 @@ jobs:
         run: |
           bench --site test_site run-tests \
             --app legal_management
-```
