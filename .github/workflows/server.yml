@@ -1,4 +1,4 @@
-name: Server Tests
+name: Individual Tests
 
 on:
   pull_request:
@@ -8,15 +8,74 @@ on:
       - develop
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: legal-management-tests-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
+
+  # Discover all test modules
+  discover:
+    name: Discover Test Modules
+    runs-on: ubuntu-latest
+
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          path: source
+
+      - name: Discover tests
+        id: set-matrix
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          package = Path("source/legal_management")
+          tests = []
+
+          for file in sorted(package.rglob("test_*.py")):
+              content = file.read_text(errors="ignore")
+
+              if "def test_" not in content:
+                  continue
+
+              module = ".".join(file.with_suffix("").parts[1:])
+              tests.append({"test": module})
+
+          if not tests:
+              raise SystemExit("No test modules found in legal_management")
+
+          matrix = {"include": tests}
+
+          with open(os.environ["GITHUB_OUTPUT"], "a") as output:
+              output.write(
+                  "matrix=" + json.dumps(matrix) + "\n"
+              )
+
+          print(json.dumps(matrix, indent=2))
+          PY
+
+  # Execute each test module independently
   test:
-    name: Legal Management Tests
+    name: Test ${{ matrix.test }}
+    needs: discover
+
     runs-on: ubuntu-latest
     timeout-minutes: 60
+
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix: ${{ fromJson(needs.discover.outputs.matrix) }}
 
     services:
       mariadb:
@@ -32,8 +91,10 @@ jobs:
           --health-retries=10
 
     steps:
-      - name: Checkout Legal Management
+      - name: Checkout
         uses: actions/checkout@v4
+        with:
+          path: source
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -48,13 +109,20 @@ jobs:
       - name: Install system dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y \
-            git curl redis-server xvfb \
-            libfontconfig1 libxrender1 libxext6 \
-            libmariadb-dev pkg-config build-essential \
-            python3-dev
 
-          sudo service redis-server start
+          sudo apt-get install -y \
+            git curl \
+            redis-tools \
+            libfontconfig1 \
+            libxrender1 \
+            libxext6 \
+            libmariadb-dev \
+            pkg-config \
+            build-essential \
+            python3-dev \
+            libffi-dev \
+            libssl-dev \
+            xvfb
 
       - name: Install Yarn
         run: npm install -g yarn
@@ -62,7 +130,7 @@ jobs:
       - name: Install Frappe Bench
         run: pip install frappe-bench
 
-      - name: Initialize Frappe Bench
+      - name: Initialize Frappe v16
         run: |
           bench init frappe-bench \
             --frappe-branch version-16 \
@@ -73,11 +141,39 @@ jobs:
         run: |
           bench get-app erpnext --branch version-16
 
-      - name: Get Legal Management
+      - name: Add Legal Management
+        run: |
+          cp -a source frappe-bench/apps/legal_management
+
+          cd frappe-bench
+
+          pip install -e apps/legal_management
+
+          echo "legal_management" >> sites/apps.txt
+
+      - name: Start Frappe Bench
         working-directory: frappe-bench
         run: |
-          bench get-app legal_management \
-            ${{ github.server_url }}/${{ github.repository }}.git
+          bench start > bench_start.log 2>&1 &
+
+          echo "Waiting for Redis..."
+
+          for port in 11000 13000; do
+            for i in {1..60}; do
+              if redis-cli -p $port ping | grep -q PONG; then
+                echo "Redis $port is ready"
+                break
+              fi
+
+              sleep 2
+            done
+
+            redis-cli -p $port ping | grep -q PONG || {
+              echo "Redis $port failed to start"
+              cat bench_start.log
+              exit 1
+            }
+          done
 
       - name: Create Test Site
         working-directory: frappe-bench
@@ -100,8 +196,15 @@ jobs:
         run: |
           bench --site test_site install-app legal_management
 
-      - name: Run Server Tests
+      - name: Enable Tests
         working-directory: frappe-bench
         run: |
+          bench --site test_site set-config allow_tests true
+
+      - name: Run Tests
+        working-directory: frappe-bench
+        run: |
+          echo "Running module: ${{ matrix.test }}"
+
           bench --site test_site run-tests \
-            --app legal_management
+            --module "${{ matrix.test }}"
