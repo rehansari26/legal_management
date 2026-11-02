@@ -8,7 +8,7 @@ from frappe.model.document import Document
 class DocumentRevision(Document):
     def before_save(self):
         old_doc = self.get_doc_before_save()
-        if not self.is_new() and old_doc and not old_doc.workflow_state == "Draft" and not old_doc.workflow_state == self.workflow_state:
+        if not self.is_new() and old_doc and not old_doc.workflow_state == self.workflow_state:
             if self.revised_nda:
                 row = self.append('nda_revisions', {})
                 row.original_nda = self.nda_document
